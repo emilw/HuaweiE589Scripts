@@ -1,6 +1,7 @@
 import requests
 import xml.etree.ElementTree as ET
 import sys
+import datetime
 
 _verbose = False
 _routerIP = ''
@@ -54,6 +55,8 @@ def Restart(session):
   PrintDebugInfo(tree,r,"Restart")
 
   print "Router being restarted"
+
+print datetime.datetime.now()
 
 if(len(sys.argv) > 1):
   _routerIP = sys.argv[1]

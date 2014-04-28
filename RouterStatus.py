@@ -5,8 +5,11 @@
 import requests
 import xml.etree.ElementTree as ET
 import sys
+import datetime
 
 _routerIP = ''
+
+print datetime.datetime.now()
 
 if(len(sys.argv) > 1):
   _routerIP = sys.argv[1]
