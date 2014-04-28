@@ -15,3 +15,9 @@
 ###Get the scripts from github
 
 `$git clone https://github.com/emilw/HuaweiE589Scripts.git`
+
+###Run the python scripts
+`cd HuaweiE589Scripts`
+`$python RouterStatus.py 192.168.10.1`
+or
+`$python RestartRouter.py 192.168.10.1`
