@@ -2,9 +2,33 @@ import requests
 import xml.etree.ElementTree as ET
 import sys
 import datetime
+import os
+from twitter import *
 
 _verbose = False
 _routerIP = ''
+
+def TwitterUpdate(message):
+  CONSUMER_KEY = 'S4ef8eeTQanQyur3eSETPnM0Y'
+  CONSUMER_SECRET = ''
+
+  consumer_secret_path = os.path.expanduser('~/.twitter_homebot_consumersecret')
+
+  with open (consumer_secret_path, "r") as myfile:
+    CONSUMER_SECRET=myfile.read().replace('\n', '')
+
+  MY_TWITTER_CREDS = os.path.expanduser('~/.twitter_homebot_oauth')
+  if not os.path.exists(MY_TWITTER_CREDS):
+    oauth_dance("HomeBotApplication", CONSUMER_KEY, CONSUMER_SECRET,
+                MY_TWITTER_CREDS)
+
+  oauth_token, oauth_secret = read_token_file(MY_TWITTER_CREDS)
+
+  twitter = Twitter(auth=OAuth(oauth_token, oauth_secret, CONSUMER_KEY, CONSUMER_SECRET))
+
+  message = str(datetime.datetime.now()) + " - " + message
+  # Now work with Twitter
+  twitter.statuses.update(status=message)
 
 def PrintDebugInfo(xmlTree, response, methodName):
   if(_verbose):
@@ -76,6 +100,7 @@ try:
     Login(s)
 
   if isLoggedIn or CheckLogin(s) == True:
+    TwitterUpdate("Router is being restarted")
     Restart(s)
   else:
     print "Could not restart due to login problems, run with --v to get more information"
