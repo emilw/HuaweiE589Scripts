@@ -1,9 +1,25 @@
+#Run the script with:
+#python RouterStatus.py 192.168.10.1
+
+
 import requests
 import xml.etree.ElementTree as ET
+import sys
+
+_routerIP = ''
+
+if(len(sys.argv) > 1):
+  _routerIP = sys.argv[1]
+  if(len(sys.argv) > 2 and sys.argv[2] == "--v"):
+    _verbose = True
+    print "Verbose mode is active"
+else:
+  print "Give IP number to the router as the first argument"
+  sys.exit()
 
 try:
-  r = requests.get('http://192.168.10.1/api/monitoring/status', timeout=1)
-  r2 = requests.get('http://192.168.10.1/api/wlan/host-list',timeout=1)
+  r = requests.get('http://' + _routerIP + '/api/monitoring/status', timeout=1)
+  r2 = requests.get('http://' + _routerIP + '/api/wlan/host-list',timeout=1)
   if r and r.status_code == requests.codes.ok:
     print "A connection was made to " + r.url
     print "Processing result"

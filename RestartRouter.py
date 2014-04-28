@@ -3,6 +3,7 @@ import xml.etree.ElementTree as ET
 import sys
 
 _verbose = False
+_routerIP = ''
 
 def PrintDebugInfo(xmlTree, response, methodName):
   if(_verbose):
@@ -21,7 +22,7 @@ def Login(session):
   print "Logging in..."
   headers = {'Content-Type': 'application/x-www-form-urlencoded'}
   xml = """<?xml version="1.0" encoding="UTF-8"?><request><Username>admin</Username><Password>YWRtaW4=</Password></request>"""
-  r = s.post('http://192.168.10.1/api/user/login', data=xml, headers=headers, allow_redirects=True)
+  r = s.post('http://' + _routerIP + '/api/user/login', data=xml, headers=headers, allow_redirects=True)
 
   tree = ET.fromstring(r.content)
 
@@ -30,7 +31,7 @@ def Login(session):
 
 def CheckLogin(session):
   print "Check if logged in..."
-  r = s.get('http://192.168.10.1/api/user/state-login',timeout=1)
+  r = s.get('http://' + _routerIP + '/api/user/state-login',timeout=1)
 
   tree = ET.fromstring(r.content)
 
@@ -47,7 +48,7 @@ def CheckLogin(session):
 def Restart(session):
   xml = """<?xml version="1.0" encoding="UTF-8"?><request><Control>1</Control></request>"""
   headers = {'Content-Type': 'application/xml'}
-  r = s.post('http://192.168.10.1/api/device/control', data=xml, headers=headers, allow_redirects=True)
+  r = s.post('http://' + _routerIP + '/api/device/control', data=xml, headers=headers, allow_redirects=True)
   tree = ET.fromstring(r.content)
 
   PrintDebugInfo(tree,r,"Restart")
@@ -55,9 +56,13 @@ def Restart(session):
   print "Router being restarted"
 
 if(len(sys.argv) > 1):
-  if(sys.argv[1] == "--v"):
+  _routerIP = sys.argv[1]
+  if(len(sys.argv) > 2 and sys.argv[2] == "--v"):
     _verbose = True
     print "Verbose mode is active"
+else:
+  print "Give IP number to the router as the first argument"
+  sys.exit()
 
 try:
   s = requests.Session()
@@ -69,7 +74,7 @@ try:
 
   if isLoggedIn or CheckLogin(s) == True:
     Restart(s)
-  else
+  else:
     print "Could not restart due to login problems, run with --v to get more information"
 
 except Exception,e:
