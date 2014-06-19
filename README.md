@@ -1,3 +1,8 @@
+#Intro
+I needed to remote control my Huawei E589 4G Wifi router. I did some reveresed engineering on the call from the web site and manage to package them in two python scripts. One that shows the current status of the router, e.g. connected clients, signal etc. and the other one restarts the router.
+
+Example use cases is to schedule the restart script every night. I sometimes feel that the Wifi router starts to loose performance after 24 hours.
+
 #Get started!
 
 ###Get all the packages
